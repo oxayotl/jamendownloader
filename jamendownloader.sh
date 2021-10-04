@@ -27,8 +27,6 @@ mkdir -p "$targetdir"
 
 wget -c -O "$targetdir/cover.jpg" "$album_art"
 
-trackn=1
-
 tracksid=`wget -O - -q "https://api.jamendo.com/v3.0/tracks/?client_id=$clientid&format=jsonpretty&album_id=$albumid&audiodlformat=flac&limit=all" | grep '"id"' | sed 's/\s*\"id\":\"//'|sed 's/\",//' `
 
 for track_id in  $tracksid; do 
@@ -37,6 +35,7 @@ for track_id in  $tracksid; do
     track_name="`echo "$track_info"|grep '"name"'|sed 's/\s*\"name\":\"//'|sed 's/\",//'`"
     track_url="`echo "$track_info"|grep '"audiodownload"'|sed 's/\s*\"audiodownload\":\"//'|sed 's/\",//'| tr -d '\\'`"
 
+    trackn="`echo "$track_info"|grep '"position"'|sed 's/\s*\"position\"://'|sed 's/,//'`"
     tracknp=$trackn
     if [ $trackn -lt 10 ]; then
         tracknp=0$trackn
@@ -55,7 +54,6 @@ for track_id in  $tracksid; do
              --remove-tag="TRACKNUMBER" --set-tag="TRACKNUMBER=$trackn"\
              "$trackfile"
 
-    trackn=$[$trackn+1]
 done
 exit
 
