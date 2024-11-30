@@ -18,6 +18,8 @@ metadata="`wget -O - -q "https://api.jamendo.com/v3.0/albums/musicinfo?client_id
 artist_name="`echo "$metadata"|grep artist_name|sed 's/\s*\"artist_name\":\"//'|sed 's/\",//'`"
 album_name="`echo "$metadata"|grep '"name"'|sed 's/\s*\"name\":\"//'|sed 's/\",//'`"
 album_art="`echo "$metadata"|grep '"image"'|sed 's/\s*\"image\":\"//'|sed 's/\",//'| tr -d '\\'`"
+#improve artwork resolution
+album_art="`echo "$album_art" | awk '{ print substr( $0, 1, length($0)-3 ) }'`"600
 
 #echo "albumid «$albumid»" #debug
 #echo "artist_name «$artist_name» «$album_name»" #debug
